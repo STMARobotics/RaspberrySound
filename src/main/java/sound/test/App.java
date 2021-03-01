@@ -17,7 +17,7 @@ public class App {
   private Clip currentlyActive = idleClip;
   public static void play(Clip clip) throws Exception {
     clip.start();
-    clip.loop(999);
+    clip.loop(Clip.LOOP_CONTINUOUSLY);
   }
 
   public static void playOnce(Clip clip) throws Exception {
@@ -40,7 +40,7 @@ public class App {
     
 
     slowClip = AudioSystem.getClip();
-    slowClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("slow1.wav")));
+    slowClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("slow.wav")));
     
     idleClip = AudioSystem.getClip();
     idleClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("stopped.wav")));
@@ -51,14 +51,14 @@ public class App {
     
     
     
-    FloatControl gainControl = (FloatControl) slowClip.getControl(FloatControl.Type.MASTER_GAIN);
-    FloatControl gainControl2 = (FloatControl) fastClip.getControl(FloatControl.Type.MASTER_GAIN);
+    //FloatControl gainControl = (FloatControl) slowClip.getControl(FloatControl.Type.MASTER_GAIN);
+    //FloatControl gainControl2 = (FloatControl) fastClip.getControl(FloatControl.Type.MASTER_GAIN);
     FloatControl gainControl3 = (FloatControl) idleClip.getControl(FloatControl.Type.MASTER_GAIN);
 
-    double gain = 0.6;    
+    double gain = 0.7;    
     float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
-    gainControl.setValue(dB);
-    gainControl2.setValue(dB);
+    //gainControl.setValue(dB);
+    //gainControl2.setValue(dB);
     gainControl3.setValue(dB);
     
 
@@ -70,8 +70,6 @@ public class App {
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable table1 = inst.getTable("datatable");
-    //NetworkTableEntry entry1 = table1.getEntry("Background");
-    //NetworkTableEntry entry2 = table1.getEntry("Cannon");
     NetworkTableEntry slowEntry = table1.getEntry("slow");
     NetworkTableEntry fastEntry = table1.getEntry("fast");
     NetworkTableEntry idleEntry = table1.getEntry("idle");
@@ -114,7 +112,7 @@ public class App {
             stop(fastClip);
             stop(idleClip);
           }
-        } else{
+        } else if (state==false){
           stop(slowClip);
         } 
       } catch (Exception e) {
@@ -135,7 +133,7 @@ public class App {
             stop(slowClip);
             stop(idleClip);
           }
-        } else{
+        } else if (state==false){
           stop(fastClip);
         } 
       } catch (Exception e) {
@@ -155,7 +153,7 @@ public class App {
             stop(slowClip);
             stop(fastClip);
           }
-        } else{
+        } else if (state==false){
           stop(idleClip);
         } 
       } catch (Exception e) {
