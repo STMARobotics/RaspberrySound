@@ -14,6 +14,7 @@ public class App {
   static Clip fastClip;
   static Clip shotClip;
   static Clip idleClip;
+  static Clip rotationClip;
   private Clip currentlyActive = idleClip;
   public static void play(Clip clip) throws Exception {
     clip.start();
@@ -49,6 +50,8 @@ public class App {
     shotClip = AudioSystem.getClip();
     shotClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("Cannon2.wav")));
     
+    rotationClip = AudioSystem.getClip();
+    rotationClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("rotation.wav")));
     
     
     //FloatControl gainControl = (FloatControl) slowClip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -74,6 +77,7 @@ public class App {
     NetworkTableEntry fastEntry = table1.getEntry("fast");
     NetworkTableEntry idleEntry = table1.getEntry("idle");
     NetworkTableEntry shotEntry = table1.getEntry("shot");
+    NetworkTableEntry rotationEntry = table1.getEntry("rotation");
     NetworkTableEntry entryMain = table1.getEntry("audio");
 
     
@@ -86,12 +90,17 @@ public class App {
       try {
         System.out.println("Event");
         boolean state = event.getEntry().getBoolean(false);
+        boolean rotationState = rotationEntry.getBoolean(false);
         if (state == true){
           play(currentlyActive);
+          if (rotationState == true){
+            play(rotationClip);
+          }
         } else if (state == false){
           stop(slowClip);
           stop(fastClip);
           stop(idleClip);
+          stop(rotationClip);
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -174,6 +183,23 @@ public class App {
         e.printStackTrace();
       }
       }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+      rotationEntry.addListener(event -> {
+        try {
+          System.out.println("Event");
+          boolean state = event.getEntry().getBoolean(false);
+          boolean activated = entryMain.getBoolean(false);
+          if (state == true){
+            if (activated){
+              play(rotationClip);
+            }
+          } else if (state==false){
+            stop(rotationClip);
+          } 
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
   
       while(true){
