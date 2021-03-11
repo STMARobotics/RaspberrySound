@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
 
 public class App {
 
@@ -15,6 +16,7 @@ public class App {
   static Clip shotClip;
   static Clip idleClip;
   static Clip rotationClip;
+  static Clip promotionClip;
   private Clip currentlyActive = idleClip;
   public static void play(Clip clip) throws Exception {
     clip.start();
@@ -52,6 +54,9 @@ public class App {
     
     rotationClip = AudioSystem.getClip();
     rotationClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("rotation.wav")));
+
+    promotionClip = AudioSystem.getClip();
+    promotionClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("promotion.wav")));
     
     
     //FloatControl gainControl = (FloatControl) slowClip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -79,6 +84,7 @@ public class App {
     NetworkTableEntry shotEntry = table1.getEntry("shot");
     NetworkTableEntry rotationEntry = table1.getEntry("rotation");
     NetworkTableEntry entryMain = table1.getEntry("audio");
+    NetworkTableEntry promotionEntry = table1.getEntry("promotion");
 
     
     inst.startClientTeam(7028);
@@ -184,22 +190,62 @@ public class App {
       }
       }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
-      rotationEntry.addListener(event -> {
-        try {
-          System.out.println("Event");
-          boolean state = event.getEntry().getBoolean(false);
-          boolean activated = entryMain.getBoolean(false);
-          if (state == true){
-            if (activated){
-              play(rotationClip);
-            }
-          } else if (state==false){
-            stop(rotationClip);
-          } 
-        } catch (Exception e) {
-          e.printStackTrace();
+    rotationEntry.addListener(event -> {
+      try {
+        System.out.println("Event");
+        boolean state = event.getEntry().getBoolean(false);
+        boolean promotionState = promotionEntry.getBoolean(false);
+        boolean activated = entryMain.getBoolean(false);
+        if (state == true){
+          if (activated && !promotionState){
+            play(rotationClip);
+          }
+        } else if (state==false){
+          stop(rotationClip);
+        } 
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+
+    promotionEntry.addListener(event -> {
+      try {
+        System.out.println("Event");
+        boolean state = event.getEntry().getBoolean(false);
+        boolean rotationState = rotationEntry.getBoolean(false);
+        // boolean activated = entryMain.getBoolean(false);
+        if (state == true){
+          stop(slowClip);
+          stop(fastClip);
+          stop(idleClip);
+          stop(rotationClip);
+          playOnce(promotionClip);
         }
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        else if (state==false){
+        } 
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+    
+    promotionClip.addLineListener(event -> {
+      boolean rotationState = rotationEntry.getBoolean(false);
+      if (event.getType() == LineEvent.Type.STOP){
+        promotionEntry.setBoolean(false);
+        boolean activated = entryMain.getBoolean(false);
+        if (activated){
+          try {
+            play(currentlyActive);
+            if (rotationState == true){
+              play(rotationClip);
+           }
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
+    });
+    
 
   
       while(true){
