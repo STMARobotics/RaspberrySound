@@ -96,8 +96,9 @@ public class App {
       try {
         System.out.println("Event");
         boolean state = event.getEntry().getBoolean(false);
+        boolean promotionState = promotionEntry.getBoolean(false);
         boolean rotationState = rotationEntry.getBoolean(false);
-        if (state == true){
+        if (state == true && !promotionState){
           play(currentlyActive);
           if (rotationState == true){
             play(rotationClip);
@@ -212,8 +213,6 @@ public class App {
       try {
         System.out.println("Event");
         boolean state = event.getEntry().getBoolean(false);
-        boolean rotationState = rotationEntry.getBoolean(false);
-        // boolean activated = entryMain.getBoolean(false);
         if (state == true){
           stop(slowClip);
           stop(fastClip);
@@ -230,6 +229,7 @@ public class App {
     
     promotionClip.addLineListener(event -> {
       boolean rotationState = rotationEntry.getBoolean(false);
+
       if (event.getType() == LineEvent.Type.STOP){
         promotionEntry.setBoolean(false);
         boolean activated = entryMain.getBoolean(false);
