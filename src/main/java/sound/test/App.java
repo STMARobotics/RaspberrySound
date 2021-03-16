@@ -11,6 +11,7 @@ import javax.sound.sampled.Line;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
+import javax.sound.sampled.Mixer.Info;
 
 public class App {
 
@@ -42,30 +43,37 @@ public class App {
 
   public static void main(String[] args) throws Exception {
     var mixerInfos = AudioSystem.getMixerInfo();
+    Info selectedMixer = null;
     for(var mixerInfo : mixerInfos) {
-      if (AudioSystem.getMixer(mixerInfo).isLineSupported(new Line.Info(SourceDataLine.class))) {
-        System.out.println("Mixer: " + mixerInfo.getName());
+      if (mixerInfo.getName().contains("sndrpihifiberry") &&
+            AudioSystem.getMixer(mixerInfo).isLineSupported(new Line.Info(SourceDataLine.class))) {
+          selectedMixer = mixerInfo;
       }
     }
 
-    fastClip = AudioSystem.getClip();
+    if (selectedMixer == null) {
+      System.err.println("Failed to find Raspberry HIFI Hat!");
+      System.exit(1);
+    }
+
+    fastClip = AudioSystem.getClip(selectedMixer);
     fastClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("fast.wav")));
     
 
-    slowClip = AudioSystem.getClip();
+    slowClip = AudioSystem.getClip(selectedMixer);
     slowClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("slow.wav")));
     
-    idleClip = AudioSystem.getClip();
+    idleClip = AudioSystem.getClip(selectedMixer);
     idleClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("stopped.wav")));
     
     
-    shotClip = AudioSystem.getClip();
+    shotClip = AudioSystem.getClip(selectedMixer);
     shotClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("Cannon2.wav")));
     
-    rotationClip = AudioSystem.getClip();
+    rotationClip = AudioSystem.getClip(selectedMixer);
     rotationClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("rotation.wav")));
 
-    promotionClip = AudioSystem.getClip();
+    promotionClip = AudioSystem.getClip(selectedMixer);
     promotionClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("promotion.wav")));
     
     
