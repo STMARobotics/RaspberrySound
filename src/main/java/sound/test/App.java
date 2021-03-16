@@ -7,7 +7,10 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.Line;
 import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.TargetDataLine;
 
 public class App {
 
@@ -38,6 +41,13 @@ public class App {
 
 
   public static void main(String[] args) throws Exception {
+    var mixerInfos = AudioSystem.getMixerInfo();
+    for(var mixerInfo : mixerInfos) {
+      if (AudioSystem.getMixer(mixerInfo).isLineSupported(new Line.Info(SourceDataLine.class))) {
+        System.out.println("Mixer: " + mixerInfo.getName());
+      }
+    }
+
     fastClip = AudioSystem.getClip();
     fastClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("fast.wav")));
     
