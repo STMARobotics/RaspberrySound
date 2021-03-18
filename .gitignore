@@ -157,6 +157,7 @@ gradle-app.setting
 .settings/
 bin/
 imgui.ini
+.vscode/launch.json
 
 
 # End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode
