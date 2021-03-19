@@ -33,7 +33,7 @@ crontab -e
 If prompted, select to edit the file in Nano, it is easiest.
 Add this line to the bottom of the file to schedule the job and log to a file called log.txt.
 ```
-@reboot cd /home/pi/RaspberrySound && ./gradlew run --args 192.168.1.214 > /home/pi/log.txt 2>1
+@reboot cd /home/pi/RaspberrySound && ./gradlew run > /home/pi/log.txt 2>&1
 ```
 
 ### Java configuration
