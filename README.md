@@ -68,3 +68,13 @@ The robot sets a network table value to trigger playing the audio file.
         playEntry.setBoolean(true);
     }
 ```
+
+## Raspberry Pi Amp HAT
+Documentation for the Amp HAT can be found here: http://wiki.inno-maker.com/display/HIFIAMPHAT
+
+The overlay needs to be added to the `config.txt` file, and then a reboot is needed. This can be done with the following commands:
+```
+sudo echo "dtoverlay=hifiberry-amp" >> /boot/config.txt
+sudo reboot 0
+```
+Once the reboot is complete use `raspi-config` to select the output device (see above).
