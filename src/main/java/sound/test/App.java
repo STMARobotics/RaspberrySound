@@ -53,13 +53,6 @@ public class App {
     }
   }
 
-  private void setVolume(Clip clip, float volume) {
-    var gainControl = (FloatControl) clip.getControl(Type.MASTER_GAIN);
-    float range = gainControl.getMaximum() - gainControl.getMinimum();
-    float gain = (range * volume) + gainControl.getMinimum();
-    gainControl.setValue(gain);
-  }
-
   private NetworkTableEntry getOrCreateEntry(String key) {
     NetworkTableEntry entry = table1.getEntry(key);
     entry.setBoolean(entry.getBoolean(false));
@@ -103,7 +96,6 @@ public class App {
 
     shotClip = AudioSystem.getClip();
     shotClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("Cannon2.wav")));
-    setVolume(shotClip, 1f);
 
     rotationClip = AudioSystem.getClip();
     rotationClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("rotation.wav")));
