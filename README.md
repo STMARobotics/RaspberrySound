@@ -25,15 +25,22 @@ click the speaker icon on the desktop and select the output device. You can also
 using `sudo raspi-config` and selecting System Options > Audio.
 
 ### Scheduling at startup
-Schedule this project to run on startup with cron. For example, if it is directory `/home/pi/RaspberrySound`, follow these steps.
-Open a crontab
+Schedule this project to run on startup with systemd.
 ```
-crontab -e
-```
-If prompted, select to edit the file in Nano, it is easiest.
-Add this line to the bottom of the file to schedule the job and log to a file called log.txt.
-```
-@reboot cd /home/pi/RaspberrySound && ./gradlew run > /home/pi/log.txt 2>&1
+[Unit]
+Description=Tank Bot Sound
+Wants=sound.target
+After=sound.target
+[Service]
+Restart=on-failure
+RestartSec=5s
+User=pi
+Type=simple
+RemainAfterExit=no
+WorkingDirectory=/home/pi/RaspberrySound
+ExecStart=/home/pi/RaspberrySound/gradlew run
+[Install]
+WantedBy=multi-user.target
 ```
 
 ### Java configuration
