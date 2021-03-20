@@ -29,6 +29,7 @@ public class App {
   private NetworkTableEntry promotionEntry;
 
   public static void main(String[] args) throws Exception {
+    Runtime.getRuntime().exec("pulseaudio --start");
     new App().run(args);
   }
 
