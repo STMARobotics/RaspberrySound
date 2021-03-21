@@ -26,6 +26,14 @@ using `sudo raspi-config` and selecting System Options > Audio.
 
 ### Scheduling at startup
 Schedule this project to run on startup with systemd.
+
+Create a file with the below contents in the folder `/etc/systemd/system`.
+
+```
+sudo nano /etc/systemd/system/raspberrysound.service
+```
+
+Add contents like this to the file and save:
 ```
 [Unit]
 Description=Tank Bot Sound
@@ -41,6 +49,17 @@ WorkingDirectory=/home/pi/RaspberrySound
 ExecStart=/home/pi/RaspberrySound/gradlew run
 [Install]
 WantedBy=multi-user.target
+```
+
+Start the service and then check that it starts up with these comands:
+```
+sudo systemctl start raspberrysound
+journalctl -f -u raspberrysound
+```
+
+If the service was successful enable so it will start automatically when the computer boots up:
+```
+sudo systemctl enable raspberrysound.service
 ```
 
 ### Java configuration

@@ -2,9 +2,7 @@ package sound.test;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.FloatControl.Type;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
@@ -29,7 +27,6 @@ public class App {
   private NetworkTableEntry promotionEntry;
 
   public static void main(String[] args) throws Exception {
-    Runtime.getRuntime().exec("pulseaudio --start");
     new App().run(args);
   }
 
@@ -79,6 +76,10 @@ public class App {
   }
 
   public void run(String[] args) throws Exception {
+    if (System.getProperty("os.name").toUpperCase().contains("LINUX")) {
+      System.out.println("Starting pulseaudio");
+      Runtime.getRuntime().exec("pulseaudio --start");
+    }
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     if (args == null || args.length ==0 || args[0] == null || args[0].length() == 0) {
       inst.startClientTeam(7028);
