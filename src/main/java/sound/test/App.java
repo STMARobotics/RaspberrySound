@@ -40,12 +40,6 @@ public class App {
   }
 
   private void setVolume(Clip clip, Double volume) {
-    //var gainControl = (FloatControl) clip.getControl(Type.MASTER_GAIN);
-    //float range = gainControl.getMaximum() - gainControl.getMinimum();
-    //float gain = (range * volume) + gainControl.getMinimum();
-    //gainControl.setValue(gain);
-
-
     FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
     double gain = volume;   
     float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
