@@ -117,6 +117,9 @@ public class App {
     setVolume(idleClip,0.05);
     setVolume(slowClip,0.1);
     setVolume(fastClip,0.2);
+    setVolume(rotationClip,0.6);
+    setVolume(promotionClip,0.8);
+    setVolume(shotClip,1.0);
 
     while(!inst.isConnected()) {
       Thread.sleep(1000);
