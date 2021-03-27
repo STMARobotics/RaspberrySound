@@ -39,11 +39,17 @@ public class App {
     }
   }
 
-  private void setVolume(Clip clip, float volume) {
-    var gainControl = (FloatControl) clip.getControl(Type.MASTER_GAIN);
-    float range = gainControl.getMaximum() - gainControl.getMinimum();
-    float gain = (range * volume) + gainControl.getMinimum();
-    gainControl.setValue(gain);
+  private void setVolume(Clip clip, Double volume) {
+    //var gainControl = (FloatControl) clip.getControl(Type.MASTER_GAIN);
+    //float range = gainControl.getMaximum() - gainControl.getMinimum();
+    //float gain = (range * volume) + gainControl.getMinimum();
+    //gainControl.setValue(gain);
+
+
+    FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+    double gain = volume;   
+    float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+    gainControl.setValue(dB);
   }
 
   private void playOnce(Clip clip) throws Exception {
@@ -114,9 +120,9 @@ public class App {
     promotionClip = AudioSystem.getClip();
     promotionClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("promotion.wav")));
 
-    setVolume(idleClip,0.95f);
-    setVolume(slowClip,0.98f);
-    setVolume(fastClip,1f);
+    setVolume(idleClip,0.9);
+    setVolume(slowClip,0.95);
+    setVolume(fastClip,1.0);
 
     while(!inst.isConnected()) {
       Thread.sleep(1000);
