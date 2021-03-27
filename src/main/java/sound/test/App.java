@@ -114,12 +114,12 @@ public class App {
     promotionClip = AudioSystem.getClip();
     promotionClip.open(AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream("promotion.wav")));
 
-    setVolume(idleClip,0.15);
-    setVolume(slowClip,0.25);
-    setVolume(fastClip,0.3);
-    setVolume(rotationClip,0.3);
-    setVolume(promotionClip,0.8);
-    setVolume(shotClip,1.0);
+    setVolume(idleClip,0.03);
+    setVolume(slowClip,0.04);
+    setVolume(fastClip,0.06);
+    setVolume(rotationClip,0.06);
+    setVolume(promotionClip,0.06);
+    setVolume(shotClip,0.9);
 
     while(!inst.isConnected()) {
       Thread.sleep(1000);
