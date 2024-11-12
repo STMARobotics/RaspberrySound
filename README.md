@@ -96,7 +96,7 @@ The robot sets a network table value to trigger playing the audio file.
 ```
 
 ## Raspberry Pi Amp HAT
-Documentation for the Amp HAT can be found here: http://wiki.inno-maker.com/display/HIFIAMPHAT
+Documentation for the Amp HAT can be found here: https://www.inno-maker.com/product/hifi-amp-hat/
 
 The overlay needs to be added to the `config.txt` file, and then a reboot is needed. This can be done with the following commands:
 ```
